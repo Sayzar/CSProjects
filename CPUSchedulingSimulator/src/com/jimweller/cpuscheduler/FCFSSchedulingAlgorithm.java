@@ -3,6 +3,9 @@
  * A first-come first-served scheduling algorithm.
  *
  * @author: Kyle Benson
+ * 
+ * Cesar Ramirez - 45406343
+ * Richard Yao - 
  * Winter 2013
  *
  */
@@ -35,8 +38,8 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 	when switching to another algorithm in the GUI */
     public void transferJobsTo(SchedulingAlgorithm otherAlg) {
     	for (int i = jobs.size()-1; i >= 0; i--) {
-    	    Process job = jobs.get(0);
-    	    this.removeJob(job);
+    	    Process job = jobs.firstElement();
+    	    removeJob(job);
     	    otherAlg.addJob(job);
     	}
     }
@@ -48,10 +51,20 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
     /** Returns the next process that should be run by the CPU, null if none available.*/
     public Process getNextJob(long currentTime){
-    	if(jobs.size() == 0)
-    		return null;
-    	else
-    		activeJob = jobs.firstElement();    	
+    	Process earlyProcess = null, process = null;
+    	long arrivalTime = 0, earlierTime = 0;
+    	for(int i = 0; i <= jobs.size()-1; i++)
+    	{
+    		process = jobs.get(i);
+    		arrivalTime = process.getArrivalTime();
+    		//checks to see which got first or sets base times
+    		if(arrivalTime < earlierTime || i == 0)
+    		{
+    			earlierTime = arrivalTime;
+    			earlyProcess = process;
+    		}
+    	}
+    	activeJob = earlyProcess;
     	return activeJob;
     }
 
