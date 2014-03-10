@@ -16,6 +16,7 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
     private Vector<Process> jobs;
     
     PrioritySchedulingAlgorithm(){
+    	activeJob = null;
     	preemptive = isPreemptive();
     	jobs = new Vector<Process>();
     }
@@ -27,6 +28,8 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
     
     /** Returns true if the job was present and was removed. */
     public boolean removeJob(Process p){
+    	if(p == activeJob)
+    		activeJob = null;
     	return jobs.remove(p);
     }
 
