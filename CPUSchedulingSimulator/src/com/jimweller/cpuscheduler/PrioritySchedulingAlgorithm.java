@@ -4,7 +4,8 @@
  *
  * @author: Kyle Benson
  * Winter 2013
- *
+ * Cesar Ramirez - 45406343
+ * Richard Yao -
  */
 package com.jimweller.cpuscheduler;
 
@@ -32,13 +33,37 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
     /** Transfer all the jobs in the queue of a SchedulingAlgorithm to another, such as
 	when switching to another algorithm in the GUI */
     public void transferJobsTo(SchedulingAlgorithm otherAlg) {
-
+    	for (int i = jobs.size()-1; i >= 0; i--) {
+    	    Process job = jobs.firstElement();
+    	    removeJob(job);
+    	    otherAlg.addJob(job);
+    	}
     }
 
 
     /** Returns the next process that should be run by the CPU, null if none available.*/
     public Process getNextJob(long currentTime){
-    	return null;
+    	
+    	//makes sure it doesn't switch if one witha  higher priority enters queue
+    	if (!isJobFinished() && !isPreemptive())
+    	    return activeJob;
+    	
+    	Process highPrior= null;
+    	Process process= null;
+    	long highest = 0;
+    	long lower = 0;
+    	for(int i = 0; i < jobs.size() -1; i++)
+    	{
+    		lower = jobs.get(i).getPriorityWeight();
+    		process = jobs.get(i);
+    		if(i == 0 || highest > lower)
+    		{
+    			highest = lower;
+    			highPrior = process;
+    		}
+    	}
+    	activeJob = highPrior;
+    	return activeJob;
     }
 
     public String getName(){
@@ -58,4 +83,5 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
     public void setPreemptive(boolean  v){
 	preemptive = v;
     }
+    
 }
