@@ -46,7 +46,7 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
 
 
     public boolean shouldPreempt(long currentTime){
-    	return isJobFinished();
+    	return false;
     }
 
     /** Returns the next process that should be run by the CPU, null if none available.*/
