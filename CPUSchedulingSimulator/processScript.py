@@ -12,16 +12,18 @@ from scipy.stats import norm
 
 import random
 
-def normalDis(fileName, avgBurstTime, procNumber):
+def normalDis(fileName, avgBurstTime, procNumber, priorNum):
     normalDisList = norm.rvs(avgBurstTime, avgBurstTime/6 , procNumber)
+    priorList = norm.rvs(priorNum, 1, procNumber)
     f = open(fileName, 'a')   
-    for i in normalDisList:
+    for i,j in zip(normalDisList, priorList):
         n = int(i)
         r = random.randint(0,69) 
-        prior = random.randint(0, 9)
-        f.write(str(n) +' '+ str(r) + ' '+ str(prior) + '\n')
+        p = int(j)
+        f.write(str(n) +' '+ str(r) + ' '+ str(p) + '\n')
 
 
-normalDis('fortyfcfs.dat', 40, 100)
-normalDis('sixtyfcfs.dat', 60, 100)
-normalDis('eightyfcfs.dat', 80, 100)
+normalDis('thirtyavgtwo.dat', 30, 100, 2)
+normalDis('thirtyavgseven.dat', 30, 100, 7)
+normalDis('seventyavgtwo.dat', 70, 100, 2)
+normalDis('seventyavgseven.dat',70, 100, 7)

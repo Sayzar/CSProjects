@@ -59,7 +59,7 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
     	{
     		lower = jobs.get(i).getPriorityWeight();
     		process = jobs.get(i);
-    		if(i == 0 || highest > lower)
+    		if(i == 0 || lower < highest)
     		{
     			highest = lower;
     			highPrior = process;
