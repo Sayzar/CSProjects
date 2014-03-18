@@ -5,15 +5,15 @@
  * @author: Kyle Benson
  * Winter 2013
  * Cesar Ramirez - 45406343
- * Richard Yao -
+ * Richard Yao - 3776291
  */
 package com.jimweller.cpuscheduler;
 
 import java.util.Vector;
 
 public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm implements OptionallyPreemptiveSchedulingAlgorithm {
-    private boolean preemptive;
-    private Vector<Process> jobs;
+    public boolean preemptive;
+    public Vector<Process> jobs;
     
     PrioritySchedulingAlgorithm(){
     	activeJob = null;
@@ -46,29 +46,32 @@ public class PrioritySchedulingAlgorithm extends BaseSchedulingAlgorithm impleme
 
     /** Returns the next process that should be run by the CPU, null if none available.*/
     public Process getNextJob(long currentTime){
-    	
-    	//makes sure it doesn't switch if one witha  higher priority enters queue
     	if (!isJobFinished() && !isPreemptive())
-    	    return activeJob;
-    	
-    	Process highPrior= null;
-    	Process process= null;
-    	long highest = 0;
-    	long lower = 0;
-    	for(int i = 0; i < jobs.size() -1; i++)
-    	{
-    		lower = jobs.get(i).getPriorityWeight();
-    		process = jobs.get(i);
-    		if(i == 0 || lower < highest)
-    		{
-    			highest = lower;
-    			highPrior = process;
-    		}
-    	}
-    	activeJob = highPrior;
+    	    return activeJob; 	
+    	activeJob = findLowest();
     	return activeJob;
     }
 
+ /** helper method*/   
+    public Process findLowest()
+    {
+    	Process highPrior= null;
+    	Process process= null;
+    	long highest = 0;
+    	long priority = 0;
+    	for(int i = 0; i <= jobs.size()-1; i++)
+    	{
+    		process = jobs.get(i);
+    		priority = process.getPriorityWeight();
+    		
+    		if(i == 0 || priority < highest)
+    		{
+    			highest = priority;
+    			highPrior = process;
+    		}
+    	}  	
+    	return highPrior;
+    }
     public String getName(){
 	return "Single-queue Priority";
     }

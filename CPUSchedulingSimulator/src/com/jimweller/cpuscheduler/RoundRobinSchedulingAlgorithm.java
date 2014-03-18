@@ -4,7 +4,8 @@
  *
  * @author: Kyle Benson
  * Winter 2013
- *
+ * Cesar Ramirez - 45406343
+ * Richard Yao - 3776291
  */
 package com.jimweller.cpuscheduler;
 
@@ -16,16 +17,15 @@ public class RoundRobinSchedulingAlgorithm extends BaseSchedulingAlgorithm {
     private int quantum;
     private int quantumCounter;
     private Vector<Process> jobs;
-private int index;
-
+    private int index;
     RoundRobinSchedulingAlgorithm() {
 	activeJob = null;
 	jobs = new Vector<Process>();
 	index=0;
 	quantumCounter = 0;
-	quantum = 10;
-    }
 
+    }
+    
     /** Add the new job to the correct queue. */
     public void addJob(Process p) {
     	jobs.add(p);
@@ -34,7 +34,7 @@ private int index;
     /** Returns true if the job was present and was removed. */
     public boolean removeJob(Process p) {
     	if(p == activeJob)
-    		activeJob = null;
+    		activeJob = null; 	
     	return jobs.remove(p);
     }
 
@@ -57,6 +57,10 @@ private int index;
 	return quantum;
     }
 
+    public boolean isEmpty()
+    {
+    	return jobs.size() == 0;
+    }
     /**
      * Set the value of quantum.
      * 
@@ -66,19 +70,21 @@ private int index;
     public void setQuantum(int v) {
 	this.quantum = v;
     }
-
+    
     /**
      * Returns the next process that should be run by the CPU, null if none
      * available.
      */
     public Process getNextJob(long currentTime) {
+    
     	quantumCounter++;
     	if (quantum <= quantumCounter|| isJobFinished()){
     		quantumCounter=0;
+    		
     		if (jobs.size()==0){
     			return null;
     	    	}
-    		if (jobs.size()!=0){
+    		if (jobs.size()!=0){   
     			if(!isJobFinished())
     				index++;
     			if(index>=jobs.size()){
@@ -90,6 +96,7 @@ private int index;
     	if(quantum>quantumCounter){
     			return activeJob;
     	}
+    	
     		return null;
     }
 

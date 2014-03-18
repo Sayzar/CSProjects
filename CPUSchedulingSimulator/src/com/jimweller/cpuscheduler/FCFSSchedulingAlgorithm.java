@@ -5,7 +5,7 @@
  * @author: Kyle Benson
  * 
  * Cesar Ramirez - 45406343
- * Richard Yao - 
+ * Richard Yao - 3776291
  * Winter 2013
  *
  */
@@ -43,33 +43,19 @@ public class FCFSSchedulingAlgorithm extends BaseSchedulingAlgorithm {
     	    otherAlg.addJob(job);
     	}
     }
-
-
     public boolean shouldPreempt(long currentTime){
     	return false;
     }
-
     /** Returns the next process that should be run by the CPU, null if none available.*/
     public Process getNextJob(long currentTime){
-    	Process earlyProcess = null;
-    	Process process = null;
-    	long arrivalTime = 0;
-    	long time = 0;
-    	for(int i = 0; i <= jobs.size()-1; i++)
-    	{
-    		process = jobs.get(i);
-    		arrivalTime = process.getArrivalTime();
-    		//checks to see which got first or sets base times
-    		if(i == 0 || arrivalTime < time)
-    		{
-    			time = arrivalTime;
-    			earlyProcess = process;
-    		}
-    	}
-    	activeJob = earlyProcess;
+    	activeJob = jobs.firstElement();
     	return activeJob;
     }
-
+    
+    public boolean isEmpty()
+    {
+    	return jobs.isEmpty();
+    }
     public String getName(){
 	return "First-come first-served";
     }

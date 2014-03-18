@@ -1,21 +1,29 @@
 package com.jimweller.cpuscheduler;
-
+/**
+* Cesar Ramirez - 45406343
+* Richard Yao - 3776291
+**/
 import java.util.Vector;
 
 public class MultilevelPriority extends BaseSchedulingAlgorithm implements OptionallyPreemptiveSchedulingAlgorithm{
 
 	
 	private boolean preemptive;
-	private Vector<Process> Q1, Q2, Q3, jobs;
-	
+	private Vector<Process> jobs;
+	private RoundRobinSchedulingAlgorithm r1, r2;
+	private FCFSSchedulingAlgorithm fcfs;
+	private int quantum = 10;
+	private Process currentJob;
 	MultilevelPriority() {
+		currentJob = null;
 		jobs = new Vector<Process>();
-		Q1 = new Vector<Process>();
-		Q2 = new Vector<Process>();
-		Q3 = new Vector<Process>();
-		activeJob = null;
 		preemptive = isPreemptive();
-
+		r1 = new RoundRobinSchedulingAlgorithm();
+		r1.setQuantum(quantum);
+		r2 = new RoundRobinSchedulingAlgorithm();
+		r2.setQuantum(quantum*2);
+		fcfs = new FCFSSchedulingAlgorithm();
+		
 	}
 	@Override
 	public boolean isPreemptive() {
@@ -30,11 +38,11 @@ public class MultilevelPriority extends BaseSchedulingAlgorithm implements Optio
 	@Override
 	public void addJob(Process p) {
 		if(p.getPriorityWeight() <= 3)
-			Q1.add(p);
+			r1.addJob(p);
 		if(p.getPriorityWeight() >= 4 && p.getPriorityWeight() <= 6)
-			Q2.add(p);
+			r2.addJob(p);
 		if(p.getPriorityWeight() >= 7 && p.getPriorityWeight() <=9)
-			Q3.add(p);
+			fcfs.addJob(p);
 		
 		jobs.add(p);
 	}
@@ -44,7 +52,7 @@ public class MultilevelPriority extends BaseSchedulingAlgorithm implements Optio
 		if(p == activeJob)
 			activeJob = null;
 		jobs.remove(p);	
-		return Q1.remove(p) || Q2.remove(p) || Q3.remove(p);
+		return r1.removeJob(p) || r2.removeJob(p) || fcfs.removeJob(p);
 	}
 
 	@Override
@@ -59,13 +67,47 @@ public class MultilevelPriority extends BaseSchedulingAlgorithm implements Optio
 
 	@Override
 	public Process getNextJob(long currentTime) {
-		// TODO Auto-generated method stub
+		if(!isJobFinished() && !isPreemptive())
+			return currentJob;
+
+		if(!r1.isEmpty() && r2.isJobFinished()|| !r1.isEmpty() && isPreemptive()){
+			currentJob = r1.getNextJob(currentTime);
+			return currentJob;
+		}
+		else if(!r2.isEmpty())
+		{
+			currentJob = r2.getNextJob(currentTime);
+			return currentJob;
+		}
+		else if(!fcfs.isEmpty())
+		{
+			currentJob = fcfs.getNextJob(currentTime);
+			return currentJob;
+		}
+
 		return null;
 	}
-
 	@Override
 	public String getName() {
 		return "Multilevel Priority";
 	}
-
+	
+	
+    /**
+     * Get the value of quantum.
+     * 
+     * @return Value of quantum.
+     */
+    public int getQuantum() {
+	return quantum;
+    }
+    /**
+     * Set the value of quantum.
+     * 
+     * @param v
+     *            Value to assign to quantum.
+     */
+    public void setQuantum(int v) {
+	this.quantum = v;
+    }
 }
