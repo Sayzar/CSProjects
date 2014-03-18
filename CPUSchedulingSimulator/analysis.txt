@@ -1,0 +1,7 @@
+The burst size does not affect the turnaround and the waiting time because FCFS runs processes till completion and does not stop when the burst size is hit.
+
+Jobs that have the priority proportional to its burst time had a lower wait time in nonpremptive and premptive had a better average wait time and response time. This should be because the higher priority ones were able to get to the run earlier than the ones that were stuck waiting. But this only worked for the processes that are longer. When the burst time is shorter, the inverse priority is better because more processes can be accessed in a given time because the processes finish more quickly.
+
+The average wait and turnaround for nonpremptive and preemptive decreases a lot when the burst times are decreased and the averages for the nonpremptive and preemptive are pretty much the same for each respective burst times. This is expected because when the CPU bursts are longer, there turn around time will increase and so will the wait time because there is a need to wait on the processes to finish.
+
+It is not better to have larger time quantums for longer jobs because the average turnaround time and wait time is about the same for each of them, but the average response time is reduced significantly if the time quantum is smaller.
